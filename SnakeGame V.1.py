@@ -111,3 +111,7 @@ def gameloop():
             plot_snake(Game_Window, Black, Snake_list, Snake_Size)
         pygame.display.update()
         clock.tick(fps)
+    
+    pygame.quit()
+    quit()
+gameloop()
