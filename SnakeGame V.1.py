@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 pygame.init()
 
 # Colours
@@ -20,13 +21,29 @@ pygame.display.update()
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 55)
 
-def text_Screen(text, color, x, y):
+def Text_Screen(text, color, x, y):
     Screen_Text = font.render(text, True, color)
     Game_Window.blit(Screen_Text, [x, y])
 
 def plot_snake(gamewindow, color, Snake_list, Snake_Size):
     for x, y in Snake_list:
         pygame.draw.rect(gamewindow, color, [x, y, Snake_Size, Snake_Size])
+
+def Welcome():
+    Exit_Game= False
+    while not Exit_Game:
+        Game_Window.fill((233,220,229))
+        Text_Screen("Welcome To Snakes", Black, 260, 250)
+        Text_Screen("Press Space Bar To Play", Black, 232, 290)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                Exit_Game = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    gameloop()
+    
+        pygame.display.update()
+        clock.tick(60)
 
 # Game Loop
 def gameloop():
@@ -39,6 +56,11 @@ def gameloop():
     Velocity_y = 0
     Snake_list = []
     Snake_length = 1
+    # Check if HighScore file exists
+    if (not os.part.exists("HighScore.txt")):
+        with open("HighScore.txt", "w") as f:
+            f.write("0")
+            
     with open("HighScore.txt", "r") as f:
         High_Score = f.read()
 
@@ -52,11 +74,17 @@ def gameloop():
         if Game_Over:
             with open("HighScore.txt", "w")as f:
                 f.write(str(High_Score))
-            Game_Window.fill(White)
-            text_Screen("Game Over! Press Enter to Continue", Red,110, 250)
+            Game_Window.fill((233,220,229))
+            Text_Screen("Game Over! Press Enter to Continue", Red,110, 250)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     Game_Exit = True
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        Welcome()
+
         else:
         
             for event in pygame.event.get():
@@ -92,7 +120,7 @@ def gameloop():
                     High_Score = Score
             
             Game_Window.fill(White)
-            text_Screen("Score: " + str(Score) + "  HighScore: "+str(High_Score), Red, 5, 5)
+            Text_Screen("Score: " + str(Score) + "  HighScore: "+str(High_Score), Red, 5, 5)
             pygame.draw.rect(Game_Window, Red, [Food_x, Food_y, Snake_Size, Snake_Size])
 
             head = []
@@ -114,4 +142,4 @@ def gameloop():
     
     pygame.quit()
     quit()
-gameloop()
+Welcome()
