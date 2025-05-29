@@ -57,7 +57,7 @@ def gameloop():
     Snake_list = []
     Snake_length = 1
     # Check if HighScore file exists
-    if (not os.part.exists("HighScore.txt")):
+    if (not os.path.exists("HighScore.txt")):
         with open("HighScore.txt", "w") as f:
             f.write("0")
             
