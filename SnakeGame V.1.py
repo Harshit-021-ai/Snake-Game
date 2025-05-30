@@ -1,3 +1,4 @@
+# Imports
 import pygame
 import random
 import os
@@ -29,12 +30,14 @@ def plot_snake(gamewindow, color, Snake_list, Snake_Size):
     for x, y in Snake_list:
         pygame.draw.rect(gamewindow, color, [x, y, Snake_Size, Snake_Size])
 
+# Welcome Screen
+
 def Welcome():
     Exit_Game= False
     while not Exit_Game:
         Game_Window.fill((233,220,229))
-        Text_Screen("Welcome To Snakes", Black, 260, 250)
-        Text_Screen("Press Space Bar To Play", Black, 232, 290)
+        Text_Screen("Welcome To Snakes", Black, 250, 250)
+        Text_Screen("Press Space Bar To Play", Black, 215, 290)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 Exit_Game = True
@@ -56,11 +59,13 @@ def gameloop():
     Velocity_y = 0
     Snake_list = []
     Snake_length = 1
+
     # Check if HighScore file exists
+
     if (not os.path.exists("HighScore.txt")):
         with open("HighScore.txt", "w") as f:
             f.write("0")
-            
+
     with open("HighScore.txt", "r") as f:
         High_Score = f.read()
 
@@ -75,15 +80,17 @@ def gameloop():
             with open("HighScore.txt", "w")as f:
                 f.write(str(High_Score))
             Game_Window.fill((233,220,229))
-            Text_Screen("Game Over! Press Enter to Continue", Red,110, 250)
+            Text_Screen("Game Over! Press R to RESTART", Red,110, 250)
+            Text_Screen("Your Score: " + str(Score), Red, 250, 290)
+            Text_Screen("HighScore: " + str(High_Score), Red, 250, 330)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     Game_Exit = True
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        Welcome()
+                    if event.key == pygame.K_r:
+                        gameloop()
 
         else:
         
@@ -108,13 +115,29 @@ def gameloop():
                         Velocity_y = init_Velocity
                         Velocity_x = 0
 
+                    if event.key == pygame.K_d:
+                        Velocity_x = init_Velocity
+                        Velocity_y = 0
+
+                    if event.key == pygame.K_a:
+                        Velocity_x = -init_Velocity
+                        Velocity_y = 0
+
+                    if event.key == pygame.K_w:
+                        Velocity_y = -init_Velocity
+                        Velocity_x = 0
+
+                    if event.key == pygame.K_s:
+                        Velocity_y = init_Velocity
+                        Velocity_x = 0
+
             Snake_x = Snake_x + Velocity_x
             Snake_y = Snake_y + Velocity_y
 
             if abs(Snake_x - Food_x) < 20 and abs(Snake_y - Food_y) < 20:
                 Score += 1
-                Food_x = random.randint(20, (Screen_Width//2))
-                Food_y = random.randint(20, (Screen_Height//2))
+                Food_x = random.randint(20, int(Screen_Width))
+                Food_y = random.randint(20, int(Screen_Height))
                 Snake_length += 5
                 if Score>int (High_Score):
                     High_Score = Score
